@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:payment_gateway/pages/stripe/constants.dart';
 
 class StripeService {
@@ -8,9 +10,22 @@ class StripeService {
 
   Future<void> makePayment() async {
     try {
-      String? result = await _createPaymentIntent(10, "usd");
+      String? paymentIntentClientSecret = await _createPaymentIntent(10, "usd");
+      if (paymentIntentClientSecret != null) {
+        await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+            paymentIntentClientSecret: paymentIntentClientSecret,
+            merchantDisplayName: "Sahariyar Mahmud",
+          ),
+        );
+        await _processPayment();
+      } else {
+        return;
+      }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -20,8 +35,8 @@ class StripeService {
       Map<String, dynamic> data = {
         'amount': _calculateAmount(amount),
         'currency': currency,
-        // 'payment_method_types': ['card'],
-        // 'confirm': true
+        //"payment_method_types": ["card", "link"],
+        //'confirm': true
       };
       var response = await dio.post(
         "https://api.stripe.com/v1/payment_intents",
@@ -34,16 +49,28 @@ class StripeService {
           },
         ),
       );
-      if (response.statusCode == 200) {
-        print(response.data);
-        return "response.data";
+      if (response.data != null) {
+        // print(response.data);
+        return response.data["client_secret"];
       } else {
         return null;
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
     return null;
+  }
+
+  Future<void> _processPayment() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   String _calculateAmount(int amount) {

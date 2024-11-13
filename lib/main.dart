@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:payment_gateway/pages/stripe/constants.dart';
 import 'package:payment_gateway/pages/stripe/stripe.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublicApiKey;
   runApp(const MyApp());
 }
 
