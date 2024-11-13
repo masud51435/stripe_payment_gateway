@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payment_gateway/pages/stripe/stripe_service/stripe_service.dart';
 
 class StripePaymentPage extends StatefulWidget {
   const StripePaymentPage({super.key});
@@ -17,7 +18,9 @@ class _StripePaymentPageState extends State<StripePaymentPage> {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            StripeService.instance.makePayment();
+          },
           child: const Text('Pay Now'),
         ),
       ),
