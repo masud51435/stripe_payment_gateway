@@ -19,31 +19,32 @@ class _StripePaymentPageState extends State<StripePaymentPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child:  SizedBox(
+          child: Container(
             height: 60,
             width: double.infinity,
-            child: InkWell(
-              onTap: () {
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF439cfb),
+                  Color(0xFFf187fb),
+                ],
+                transform: GradientRotation(70),
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                fixedSize: Size(MediaQuery.sizeOf(context).width, 60),
+              ),
+              onPressed: () {
                 StripeService.instance.makePayment();
               },
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF439cfb),
-                      Color(0xFFf187fb),
-                    ],
-                    transform: GradientRotation(70),
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'Pay Now',
-                  style: TextStyle(
-                    fontSize: 19,
-                    color: Colors.white,
-                  ),
+              child: const Text(
+                'Pay Now',
+                style: TextStyle(
+                  fontSize: 19,
+                  color: Colors.white,
                 ),
               ),
             ),
