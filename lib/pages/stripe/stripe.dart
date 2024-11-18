@@ -38,7 +38,7 @@ class _StripePaymentPageState extends State<StripePaymentPage> {
                 fixedSize: Size(MediaQuery.sizeOf(context).width, 60),
               ),
               onPressed: () {
-                StripeService.instance.makePayment();
+                StripeService.instance.makePayment(context, 10, 'usd');
               },
               child: const Text(
                 'Pay Now',
